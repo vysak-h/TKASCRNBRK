@@ -1,0 +1,6 @@
+@TKASCRNBRK_HostAddress = http://localhost:5282
+
+GET {{TKASCRNBRK_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

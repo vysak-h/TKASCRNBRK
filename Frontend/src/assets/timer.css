@@ -1,0 +1,50 @@
+.appTimer {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.timer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 320px;
+  background-color: rgb(238, 87, 87);
+  min-height: 64px;
+  border-radius: 20px 20px 20px 20px;
+  cursor: pointer;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+
+.timer:hover {
+  box-shadow: 0 8px 16px 0 rgba(161, 12, 12, 0.4);
+  background-color: rgb(238, 87, 70);
+}
+
+.timer .isClicked {
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  transform: scale(0);
+  position: absolute;
+  animation: popEffect 0.3s ease-out;
+}
+
+.msg {
+  color: aliceblue;
+  position: absolute;
+  bottom: 20px;
+  right: 30px;
+}
+
+@keyframes popEffect {
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}

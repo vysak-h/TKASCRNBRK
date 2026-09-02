@@ -1,0 +1,9 @@
+#app {
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  display: flex;
+  flex-direction: column;
+
+  background-color: rgb(1, 19, 29);
+}
