@@ -3,6 +3,10 @@ import { defineStore } from 'pinia'
 
 export const useTimerStore = defineStore('timer', () => {
   const totalSeconds = ref(0)
+
+  const totalSecScheduled = 1200;
+  const stopTimer = ref(false)
+
   let timer: ReturnType<typeof setInterval> | null = null
 
   const formattedTimer = computed(() => {
@@ -12,7 +16,6 @@ export const useTimerStore = defineStore('timer', () => {
     return `${String(minutes).padStart(2, '0')}: ${String(seconds).padStart(2, '0')}`
   })
 
-  const stopTimer = ref(false)
 
   function startTimer() {
     if (timer) return
@@ -22,5 +25,9 @@ export const useTimerStore = defineStore('timer', () => {
     }, 1000)
   }
 
-  return { totalSeconds, stopTimer, formattedTimer, startTimer }
+  const timerPercentage = computed(() => {
+    return Math.min(( totalSeconds.value / totalSecScheduled ) * 100, 100);
+  })
+
+  return { totalSeconds, timerPercentage, stopTimer, formattedTimer, startTimer }
 })

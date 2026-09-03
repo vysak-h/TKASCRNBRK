@@ -7,6 +7,9 @@
 }
 
 .timer {
+  border: none;
+  background: none;
+  padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -25,26 +28,45 @@
   background-color: rgb(238, 87, 70);
 }
 
-.timer .isClicked {
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.4);
-  transform: scale(0);
-  position: absolute;
-  animation: popEffect 0.3s ease-out;
+.timer.isClicked {
+  animation: pulse 300ms ease;
 }
 
 .msg {
-  color: aliceblue;
-  position: absolute;
+  position: fixed;
   bottom: 20px;
   right: 30px;
+
+  min-width: 240px;
+  min-height: 35px;
+  padding: 10px 16px;
+
+  border-radius: 6px;
+  overflow: hidden;
+
+  background: red;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-@keyframes popEffect {
-  100% {
-    transform: scale(2);
-    opacity: 0;
-  }
+.msg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: var(--timerProgress);
+  background: blue;
+  border-radius: 6px;
+}
+
+.msg span {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
 }

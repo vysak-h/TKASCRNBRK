@@ -6,7 +6,7 @@ const store = useTimerStore()
 
 const isTimerClicked = ref(false)
 
-const TriggerTimer = () => {
+const triggerTimer = () => {
   isTimerClicked.value = true
   store.startTimer()
 }
@@ -14,15 +14,18 @@ const TriggerTimer = () => {
 
 <template>
   <div class="appTimer">
-    <div
+    <div>
+      <button
       class="timer"
-      @click="TriggerTimer"
+      @click="triggerTimer"
       :class="{ isClicked: isTimerClicked }"
-      @animationend="isTimerClicked = false"
-    >
-      {{ store.formattedTimer }}
+      @animationend="isTimerClicked = false">
+      {{ store.formattedTimer }}</button>
     </div>
-    <div class="msg">Take a break</div>
+    <div class="msg"
+    :style="{ '--timerProgress': store.timerPercentage + '%' }">
+    <span>Take a break</span>
+  </div>
   </div>
 </template>
 
