@@ -41,7 +41,7 @@
   min-height: 35px;
   padding: 10px 16px;
 
-  border-radius: 6px;
+  border-radius: 12px;
   overflow: hidden;
 
   background: red;
@@ -57,7 +57,7 @@
   inset: 0;
   width: var(--timerProgress);
   background: blue;
-  border-radius: 6px;
+  border-radius: 12px;
 }
 
 .msg span {

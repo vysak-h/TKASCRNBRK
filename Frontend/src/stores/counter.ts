@@ -25,9 +25,21 @@ export const useTimerStore = defineStore('timer', () => {
     }, 1000)
   }
 
+  const pauseTimer = () => {
+
+    if(timer !== null){
+      clearInterval(timer);
+      timer = null;
+    }
+    else if(timer == null)
+    {
+      startTimer();
+    }
+  }
+
   const timerPercentage = computed(() => {
     return Math.min(( totalSeconds.value / totalSecScheduled ) * 100, 100);
   })
 
-  return { totalSeconds, timerPercentage, stopTimer, formattedTimer, startTimer }
+  return { totalSeconds, timerPercentage, pauseTimer, formattedTimer, startTimer }
 })
