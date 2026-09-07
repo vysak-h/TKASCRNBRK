@@ -5,7 +5,6 @@ export const useTimerStore = defineStore('timer', () => {
   const totalSeconds = ref(0)
 
   const totalSecScheduled = 1200;
-  const stopTimer = ref(false)
 
   let timer: ReturnType<typeof setInterval> | null = null
 
@@ -18,11 +17,13 @@ export const useTimerStore = defineStore('timer', () => {
 
 
   function startTimer() {
-    if (timer) return
+    if (timer) return;
+
     timer = setInterval(() => {
       console.log('timer', totalSeconds.value)
       totalSeconds.value++
     }, 1000)
+
   }
 
   const pauseTimer = () => {
@@ -37,9 +38,19 @@ export const useTimerStore = defineStore('timer', () => {
     }
   }
 
+  const stopTimer = () =>{
+
+    if(timer !== null )
+    {
+      clearInterval(timer);
+      timer = null;
+    }
+    totalSeconds.value = 0;
+  }
+
   const timerPercentage = computed(() => {
     return Math.min(( totalSeconds.value / totalSecScheduled ) * 100, 100);
   })
 
-  return { totalSeconds, timerPercentage, pauseTimer, formattedTimer, startTimer }
+  return { totalSeconds, timerPercentage,stopTimer, pauseTimer, formattedTimer, startTimer }
 })

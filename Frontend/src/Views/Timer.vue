@@ -21,7 +21,10 @@ const triggerTimer = () => {
       :class="{ isClicked: isTimerClicked }"
       @animationend="isTimerClicked = false">
       {{ store.formattedTimer }}</button>
+      <div class="timerButton">
       <button @click="store.pauseTimer">Play/Pause</button>
+      <button @click="store.stopTimer">stop</button>
+      </div>
     </div>
     <div class="msg"
     :style="{ '--timerProgress': store.timerPercentage + '%' }">
