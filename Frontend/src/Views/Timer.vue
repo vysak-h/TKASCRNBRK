@@ -1,33 +1,59 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useTimerStore } from '@/stores/counter'
+import { useBreakSessionsStore } from '@/stores/BreakSession'
 
-const store = useTimerStore()
+const timerStore = useTimerStore()
+const breakStore = useBreakSessionsStore()
 
 const isTimerClicked = ref(false)
 
 const triggerTimer = () => {
   isTimerClicked.value = true
-  store.startTimer()
+  timerStore.startTimer()
+  timerStore.setTimerState('screenTime');
 }
+
+const triggerBreak = () => {
+  // breakStore.startBreakTimer(timerStore.totalSeconds);
+  // timerStore.stopTimer();
+  timerStore.setTimerState('breakActive');
+  breakStore.startBreakTimer(timerStore.totalSecondsActive);
+}
+
+const timerState = computed(() => {
+  return timerStore.currentState;
+})
+
 </script>
 
 <template>
+    <div style="color: brown;">Total Screen time: {{ breakStore.totalScreeTimeMin }}</div>
+    <div style="color: brown;">Timer state: {{ timerStore.currentState }}</div>
   <div class="appTimer">
     <div>
       <button
-      class="timer"
+      v-if="timerState == 'screenTime' || timerState == 'idle'"
+      class="timer Session"
       @click="triggerTimer"
       :class="{ isClicked: isTimerClicked }"
       @animationend="isTimerClicked = false">
-      {{ store.formattedTimer }}</button>
+      {{ timerStore.formattedTimer }}</button>
+      <button
+      v-if="timerState == 'breakActive'"
+      class="timer Break"
+      @click="triggerTimer"
+      :class="{ isClicked: isTimerClicked }"
+      @animationend="isTimerClicked = false">
+      {{ timerStore.formattedTimer }}</button>
       <div class="timerButton">
-      <button @click="store.pauseTimer">Play/Pause</button>
-      <button @click="store.stopTimer">stop</button>
+      <button @click="timerStore.pauseTimer">Play/Pause</button>
+      <button @click="timerStore.stopTimer">stop</button>
       </div>
     </div>
     <div class="msg"
-    :style="{ '--timerProgress': store.timerPercentage + '%' }">
+    @click="triggerBreak"
+    :style="{ '--timerProgress': timerStore.timerPercentage + '%' }">
     <span>Take a break</span>
   </div>
   </div>

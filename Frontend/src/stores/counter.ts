@@ -2,15 +2,33 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useTimerStore = defineStore('timer', () => {
-  const totalSeconds = ref(0)
 
-  const totalSecScheduled = 1200;
+
+  type TimerState =
+        | 'idle'
+        | 'screenTime'
+        | 'breakActive'
+        | 'breakCompletedWaiting'
+        | 'paused'
+
+  const totalSecondsActive = ref(0)
+  const totalSecondsBreak = ref(0)
+
+  // const totalSecScheduled = 1200;
+  const totalSecScheduled = 120;
+  const totalBreakTimeSec = 20;
 
   let timer: ReturnType<typeof setInterval> | null = null
 
+  const currentState = ref<TimerState>('idle');
+
+  const setTimerState = (state: TimerState) => {
+      currentState.value = state;
+  }
+
   const formattedTimer = computed(() => {
-    const minutes = Math.floor(totalSeconds.value / 60)
-    const seconds = totalSeconds.value % 60
+    const minutes = Math.floor(totalSecondsActive.value / 60)
+    const seconds = totalSecondsActive.value % 60
 
     return `${String(minutes).padStart(2, '0')}: ${String(seconds).padStart(2, '0')}`
   })
@@ -20,8 +38,11 @@ export const useTimerStore = defineStore('timer', () => {
     if (timer) return;
 
     timer = setInterval(() => {
-      console.log('timer', totalSeconds.value)
-      totalSeconds.value++
+      console.log('timer', totalSecondsActive.value)
+      if(currentState.value == 'screenTime' || currentState.value == 'idle')
+        totalSecondsActive.value++
+      else
+        totalSecondsBreak.value++
     }, 1000)
 
   }
@@ -45,12 +66,14 @@ export const useTimerStore = defineStore('timer', () => {
       clearInterval(timer);
       timer = null;
     }
-    totalSeconds.value = 0;
+    totalSecondsActive.value = 0;
+    totalSecondsBreak.value = 0;
   }
 
   const timerPercentage = computed(() => {
-    return Math.min(( totalSeconds.value / totalSecScheduled ) * 100, 100);
+    return Math.min(( totalSecondsActive.value / totalSecScheduled ) * 100, 100);
   })
 
-  return { totalSeconds, timerPercentage,stopTimer, pauseTimer, formattedTimer, startTimer }
+  return { totalSecondsActive, timerPercentage,setTimerState,
+    currentState, stopTimer, pauseTimer, formattedTimer, startTimer }
 })
