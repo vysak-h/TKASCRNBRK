@@ -17,8 +17,7 @@ const triggerTimer = () => {
 const triggerBreak = () => {
   // breakStore.startBreakTimer(timerStore.totalSeconds);
   // timerStore.stopTimer();
-  timerStore.setTimerState('breakActive');
-  breakStore.startBreakTimer(timerStore.totalSecondsActive);
+  timerStore.startBreakTimer();
 }
 
 const timerState = computed(() => {
@@ -42,7 +41,6 @@ const timerState = computed(() => {
       <button
       v-if="timerState == 'breakActive'"
       class="timer Break"
-      @click="triggerTimer"
       :class="{ isClicked: isTimerClicked }"
       @animationend="isTimerClicked = false">
       {{ timerStore.formattedTimer }}</button>
@@ -54,7 +52,8 @@ const timerState = computed(() => {
     <div class="msg"
     @click="triggerBreak"
     :style="{ '--timerProgress': timerStore.timerPercentage + '%' }">
-    <span>Take a break</span>
+    <span v-if="timerStore.isScreenTime">Take a break</span>
+    <span v-if="!timerStore.isScreenTime">look at some objects min 20 feet away</span>
   </div>
   </div>
 </template>

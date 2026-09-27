@@ -1,8 +1,11 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import { useBreakSessionsStore } from './BreakSession'
 
 export const useTimerStore = defineStore('timer', () => {
 
+
+const breakStore = useBreakSessionsStore()
 
   type TimerState =
         | 'idle'
@@ -15,7 +18,7 @@ export const useTimerStore = defineStore('timer', () => {
   const totalSecondsBreak = ref(0)
 
   // const totalSecScheduled = 1200;
-  const totalSecScheduled = 120;
+  const totalSecScheduled = 50;
   const totalBreakTimeSec = 20;
 
   let timer: ReturnType<typeof setInterval> | null = null
@@ -26,9 +29,30 @@ export const useTimerStore = defineStore('timer', () => {
       currentState.value = state;
   }
 
+  const isScreenTime = computed(
+    () =>  currentState.value == 'screenTime' || currentState.value == 'idle'
+  )
+
+  const startBreakTimer = () => {
+    if(currentState.value != 'breakActive'){
+      currentState.value = 'breakActive';
+      breakStore.addScreenTime(totalSecondsActive.value)
+      totalSecondsActive.value = 0;
+      stopTimer();
+      startTimer();
+    }
+  }
+
   const formattedTimer = computed(() => {
-    const minutes = Math.floor(totalSecondsActive.value / 60)
-    const seconds = totalSecondsActive.value % 60
+    let min = 0;
+
+    if(isScreenTime.value)
+      min = totalSecondsActive.value;
+    else
+      min = totalSecondsBreak.value;
+
+    const minutes = Math.floor(min / 60)
+    const seconds = min % 60
 
     return `${String(minutes).padStart(2, '0')}: ${String(seconds).padStart(2, '0')}`
   })
@@ -39,7 +63,7 @@ export const useTimerStore = defineStore('timer', () => {
 
     timer = setInterval(() => {
       console.log('timer', totalSecondsActive.value)
-      if(currentState.value == 'screenTime' || currentState.value == 'idle')
+      if(isScreenTime.value)
         totalSecondsActive.value++
       else
         totalSecondsBreak.value++
@@ -71,9 +95,13 @@ export const useTimerStore = defineStore('timer', () => {
   }
 
   const timerPercentage = computed(() => {
-    return Math.min(( totalSecondsActive.value / totalSecScheduled ) * 100, 100);
+    if(isScreenTime.value)
+      return Math.min(( totalSecondsActive.value / totalSecScheduled ) * 100, 100);
+    return Math.min(( totalSecondsBreak.value / totalBreakTimeSec ) * 100, 100);
   })
 
-  return { totalSecondsActive, timerPercentage,setTimerState,
-    currentState, stopTimer, pauseTimer, formattedTimer, startTimer }
+
+  return { totalSecondsActive, timerPercentage,totalSecondsBreak,
+    setTimerState,isScreenTime,
+    currentState, stopTimer, pauseTimer, formattedTimer, startTimer , startBreakTimer}
 })

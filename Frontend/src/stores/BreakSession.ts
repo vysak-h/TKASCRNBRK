@@ -6,7 +6,7 @@ export const useBreakSessionsStore = defineStore('breaks', () => {
   const totalScreenTime = ref(0);
   const totalScreeTimeMin = ref('');
 
-   const startBreakTimer = (totalSeconds: number) => {
+   const addScreenTime = (totalSeconds: number) => {
     computeBreakSession(totalSeconds)
    }
 
@@ -19,6 +19,6 @@ export const useBreakSessionsStore = defineStore('breaks', () => {
     totalScreeTimeMin.value =  `${String(minutes).padStart(2, '0')}: ${String(seconds).padStart(2, '0')}`
   }
 
-  return {startBreakTimer, totalScreeTimeMin }
+  return {addScreenTime, totalScreeTimeMin }
 
 })
